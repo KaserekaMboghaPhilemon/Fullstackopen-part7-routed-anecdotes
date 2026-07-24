@@ -1,3 +1,4 @@
+// src/hooks/index.js
 import { useState } from "react";
 
 export const useField = (type) => {
@@ -7,9 +8,15 @@ export const useField = (type) => {
     setValue(event.target.value);
   };
 
+  // 1. Reset function to clear the input value
+  const reset = () => {
+    setValue("");
+  };
+
   return {
     type,
     value,
     onChange,
+    reset,
   };
 };
