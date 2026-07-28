@@ -25,7 +25,8 @@ const Menu = () => {
   );
 };
 
-const Anecdote = ({ anecdotes }) => {
+const Anecdote = () => {
+  const { anecdotes } = useAnecdotes();
   const id = useParams().id;
   const anecdote = anecdotes.find((a) => String(a.id) === String(id));
 
@@ -44,18 +45,23 @@ const Anecdote = ({ anecdotes }) => {
   );
 };
 
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+const AnecdoteList = () => {
+  const { anecdotes, deleteAnecdote } = useAnecdotes();
+
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+      <ul>
+        {anecdotes.map((anecdote) => (
+          <li key={anecdote.id}>
+            <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>{" "}
+            <button onClick={() => deleteAnecdote(anecdote.id)}>delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const About = () => (
   <div>
@@ -74,7 +80,8 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = ({ addAnecdote }) => {
+const CreateNew = () => {
+  const { addAnecdote } = useAnecdotes();
   const { reset: resetContent, ...content } = useField("text");
   const { reset: resetAuthor, ...author } = useField("text");
   const { reset: resetInfo, ...info } = useField("text");
@@ -120,25 +127,17 @@ const CreateNew = ({ addAnecdote }) => {
   );
 };
 
+// Clean App component — no prop drilling!
 const App = () => {
-  // Extract addAnecdote directly from the custom hook!
-  const { anecdotes, addAnecdote } = useAnecdotes();
-
   return (
     <Router>
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
         <Routes>
-          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route
-            path="/anecdotes/:id"
-            element={<Anecdote anecdotes={anecdotes} />}
-          />
-          <Route
-            path="/create"
-            element={<CreateNew addAnecdote={addAnecdote} />}
-          />
+          <Route path="/" element={<AnecdoteList />} />
+          <Route path="/anecdotes/:id" element={<Anecdote />} />
+          <Route path="/create" element={<CreateNew />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <br />
