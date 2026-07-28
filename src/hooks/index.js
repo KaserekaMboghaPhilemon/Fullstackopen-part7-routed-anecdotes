@@ -1,5 +1,6 @@
 // src/hooks/index.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import anecdoteService from "../services/anecdotes";
 
 export const useField = (type) => {
   const [value, setValue] = useState("");
@@ -8,7 +9,6 @@ export const useField = (type) => {
     setValue(event.target.value);
   };
 
-  // 1. Reset function to clear the input value
   const reset = () => {
     setValue("");
   };
@@ -18,5 +18,18 @@ export const useField = (type) => {
     value,
     onChange,
     reset,
+  };
+};
+
+// 7.4 Custom Hook: useAnecdotes
+export const useAnecdotes = () => {
+  const [anecdotes, setAnecdotes] = useState([]);
+
+  useEffect(() => {
+    anecdoteService.getAll().then((data) => setAnecdotes(data));
+  }, []);
+
+  return {
+    anecdotes,
   };
 };
