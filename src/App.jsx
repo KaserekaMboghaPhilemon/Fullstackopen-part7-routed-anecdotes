@@ -4,10 +4,9 @@ import {
   Route,
   Link,
   useParams,
+  useNavigate,
 } from "react-router-dom";
 import { useField, useAnecdotes } from "./hooks";
-
-// --- Sub-components placed OUTSIDE of App ---
 
 const Menu = () => {
   const padding = { paddingRight: 5 };
@@ -79,6 +78,7 @@ const CreateNew = ({ addAnecdote }) => {
   const { reset: resetContent, ...content } = useField("text");
   const { reset: resetAuthor, ...author } = useField("text");
   const { reset: resetInfo, ...info } = useField("text");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,6 +88,7 @@ const CreateNew = ({ addAnecdote }) => {
       info: info.value,
       votes: 0,
     });
+    navigate("/");
   };
 
   const handleReset = (e) => {
@@ -119,14 +120,9 @@ const CreateNew = ({ addAnecdote }) => {
   );
 };
 
-// --- Main App Component ---
-
 const App = () => {
-  const { anecdotes } = useAnecdotes();
-
-  const addAnecdote = (anecdote) => {
-    console.log("addAnecdote called:", anecdote);
-  };
+  // Extract addAnecdote directly from the custom hook!
+  const { anecdotes, addAnecdote } = useAnecdotes();
 
   return (
     <Router>

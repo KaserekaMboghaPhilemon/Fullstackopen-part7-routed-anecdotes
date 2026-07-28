@@ -21,7 +21,7 @@ export const useField = (type) => {
   };
 };
 
-// 7.4 Custom Hook: useAnecdotes
+// 7.5 Custom Hook: useAnecdotes extended with addAnecdote
 export const useAnecdotes = () => {
   const [anecdotes, setAnecdotes] = useState([]);
 
@@ -29,7 +29,13 @@ export const useAnecdotes = () => {
     anecdoteService.getAll().then((data) => setAnecdotes(data));
   }, []);
 
+  const addAnecdote = async (anecdoteObject) => {
+    const newAnecdote = await anecdoteService.createNew(anecdoteObject);
+    setAnecdotes(anecdotes.concat(newAnecdote));
+  };
+
   return {
     anecdotes,
+    addAnecdote,
   };
 };
